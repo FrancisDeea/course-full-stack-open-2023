@@ -22,16 +22,20 @@ const App = () => {
 
       <div>
         <h2>Statistics</h2>
-        <p>Good: {good}</p>
-        <p>Neutral: {neutral}</p>
-        <p>Bad: {bad}</p>
-        <p>All: {all}</p>
-        <p>Average: {average}</p>
-        <p>Positive: {positive} %</p>
+        <Statistics text="Good" variable={good} />
+        <Statistics text="Neutral" variable={neutral} />
+        <Statistics text="Bad" variable={bad} />
+        <Statistics text="All" variable={all} />
+        <Statistics text="Average" variable={average} />
+        <Statistics text="Positive" variable={positive} />
       </div>
     </div>
   )
 }
+
+const Statistics = ({text, variable}) => (
+  <p>{text}: {variable} {text === "Positive" ? "%" : null}</p>
+)
 
 const Button = ({ text, handleClick }) => (
   <button onClick={handleClick}>
