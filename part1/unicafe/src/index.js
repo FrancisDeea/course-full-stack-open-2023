@@ -26,12 +26,12 @@ const App = () => {
           good || neutral || bad
             ? (
               <>
-                <Statistics text="Good" variable={good} />
-                <Statistics text="Neutral" variable={neutral} />
-                <Statistics text="Bad" variable={bad} />
-                <Statistics text="All" variable={all} />
-                <Statistics text="Average" variable={average} />
-                <Statistics text="Positive" variable={positive} />
+                <Statistic text="Good" value={good} />
+                <Statistic text="Neutral" value={neutral} />
+                <Statistic text="Bad" value={bad} />
+                <Statistic text="All" value={all} />
+                <Statistic text="Average" value={average} />
+                <Statistic text="Positive" value={positive} />
               </>
             )
             : "No feedback given"
@@ -42,8 +42,8 @@ const App = () => {
   )
 }
 
-const Statistics = ({ text, variable }) => (
-  <p>{text}: {variable} {text === "Positive" ? "%" : null}</p>
+const Statistic = ({ text, value }) => (
+  <p>{text}: {value} {text === "Positive" ? "%" : null}</p>
 )
 
 const Button = ({ text, handleClick }) => (
