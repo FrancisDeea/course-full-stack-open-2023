@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
+// anecdotes is declared out of component, and is passed as props to App component.
 const App = ({anecdotes}) => {
-  const [selected, setSelected] = useState(0);
-  const [points, setPoints] = useState(Array(anecdotes.length).fill(0))
-  const indexMaxPoint = points.indexOf(Math.max(...points))
+  const [selected, setSelected] = useState(0); // selected state will be an index gererated randomly
+  const [points, setPoints] = useState(Array(anecdotes.length).fill(0)) // points is an array record to keep quote's votes
+  const indexMaxPoint = points.indexOf(Math.max(...points)) // index with highest value of votes
 
   const handleNext = () => {
     let randomIndex = Math.floor(Math.random() * anecdotes.length)
