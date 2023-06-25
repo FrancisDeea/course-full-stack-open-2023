@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import Filter from './components/Filter'
+import Form from './components/Form'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -30,7 +33,7 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const find = persons.find(person => person.name === newName)
+    const find = persons.some(person => person.name === newName)
 
     if (find) return alert(`${newName} is already added to phonebook`)
 
@@ -46,23 +49,19 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      Filter (shown with): <input value={filter} onChange={handleChangeFilter} />
+      <Filter text={filter} onchange={handleChangeFilter} />
+
       <h2>Add new</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          name: <input value={newName} onChange={handleChangeName} />
-        </div>
-        <div>
-          number: <input type='tel' value={newNumber} onChange={handleChangeNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Form
+        number={newNumber}
+        name={newName}
+        handleChangeName={handleChangeName}
+        handleChangeNumber={handleChangeNumber}
+        handleSubmit={handleSubmit}
+      />
+
       <h2>Numbers</h2>
-      {
-        numbersToShow.map(person => <p key={person.name}>{person.name} {person.number}</p>)
-      }
+      <Persons persons={numbersToShow} />
 
     </div>
   )
