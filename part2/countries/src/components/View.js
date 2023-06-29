@@ -1,3 +1,5 @@
+import WeatherService from './WeatherService';
+
 const View = ({ data }) => {
     const languagues = Object.values(data.languages);
     const { png, alt } = data.flags;
@@ -15,6 +17,7 @@ const View = ({ data }) => {
                 }
             </ul>
             <img src={png} alt={alt} width={200} />
+            <WeatherService country={data.name.common} />
         </>
     )
 }
