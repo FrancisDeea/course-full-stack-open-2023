@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Filter from './components/Filter'
 import Form from './components/Form'
 import Persons from './components/Persons'
-import axios from 'axios'
+import Notification from './components/Notification'
 import services from './services/persons';
 
 const App = () => {
@@ -10,6 +10,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState({ error: "", success: "" })
 
   const numbersToShow = filter
     ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
@@ -38,8 +39,17 @@ const App = () => {
   const handleUpdate = (id, newPerson) => {
     services
       .updatePerson(id, newPerson)
-      .then(updatedPerson => setPersons(persons.map(person => person.id !== updatedPerson.id ? person : updatedPerson)))
-      .catch(error => console.log(error))
+      .then(updatedPerson => {
+        setPersons(persons.map(person => person.id !== updatedPerson.id ? person : updatedPerson))
+        setNotification({ success: `${updatedPerson.name} contact was updated successfully` })
+        setTimeout(() => setNotification(null), 5000)
+      })
+      .catch(error => {
+        console.log(error)
+        setNotification({ error: `${newPerson.name} has already been removed from server` })
+        setTimeout(() => setNotification(null), 5000)
+        setPersons(persons.filter(person => person.id !== id))
+      })
 
     setNewName("");
     setNewNumber("");
@@ -55,7 +65,7 @@ const App = () => {
     if (findPerson && findPerson.number !== newNumber) {
       const newPerson = { ...findPerson, number: newNumber }
       if (window.confirm(`${findPerson.name} is already added to phonebook, replace the old number with a new one?`)) {
-         return handleUpdate(findPerson.id, newPerson)
+        return handleUpdate(findPerson.id, newPerson)
       }
     }
 
@@ -65,8 +75,14 @@ const App = () => {
     }
 
     services.createPerson(newPerson)
-      .then(createdPerson => setPersons(persons.concat(createdPerson)))
+      .then(createdPerson => {
+        setPersons(persons.concat(createdPerson))
+        setNotification({ success: `${createdPerson.name} was added to phonebook successfully` })
+        setTimeout(() => setNotification(null), 5000)
+      })
       .catch(error => console.log(error))
+
+
 
     setNewName("")
     setNewNumber("")
@@ -84,6 +100,7 @@ const App = () => {
       <Filter text={filter} onchange={handleChangeFilter} />
 
       <h2>Add new</h2>
+      <Notification message={notification} />
       <Form
         number={newNumber}
         name={newName}
