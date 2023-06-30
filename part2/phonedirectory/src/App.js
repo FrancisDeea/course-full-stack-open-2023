@@ -15,6 +15,14 @@ const App = () => {
     ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
     : persons
 
+  const handleClickDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this person?")) {
+      services.removePerson(id)
+        .then(() => setPersons(persons.filter(p => p.id !== id)))
+        .catch(error => console.log(error))
+    }
+  }
+
   const handleChangeFilter = (event) => {
     setFilter(event.target.value)
   }
@@ -68,7 +76,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={numbersToShow} />
+      <Persons persons={numbersToShow} onclick={handleClickDelete} />
 
     </div>
   )

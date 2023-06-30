@@ -1,7 +1,17 @@
-const Persons = ({ persons }) => (
+import Button from './Button'
+
+const Persons = ({ persons, onclick }) => (
     <>
         {
-            persons.map(person => <p key={person.name}>{person.name} {person.number}</p>)
+            persons.map(person => {
+                return (
+                    <div key={person.name}>
+                        <span>{person.name} {person.number}</span>
+                        {" "}
+                        <Button value="delete" onclick={onclick} id={person.id} />
+                    </div>
+                )
+            })
         }
     </>
 )
