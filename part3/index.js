@@ -2,7 +2,12 @@ const express = require('express');
 const app = express();
 const PORT = 3001;
 
-const persons = [
+const generateId = () => {
+    const maxId = Math.max(...persons.map(person => person.id))
+    return Math.floor(Math.random() * (9999 - maxId) + maxId)
+}
+
+let persons = [
     {
         "name": "Arto Hellas",
         "number": "040-123456",
@@ -25,6 +30,28 @@ const persons = [
     }
 ]
 
+app.use(express.json())
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body;
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId()
+    }
+
+    persons = persons.concat(person);
+    response.json(person)
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id);
+    persons = persons.filter(person => person.id !== id);
+
+    response.status(204).end();
+})
+
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
@@ -44,7 +71,7 @@ app.get('/api/persons/:id', (request, response) => {
         return response.status(404).json({error: "Person not found"})
     }
 
-    return response.json(find)
+    response.json(find)
 })
 
 app.listen(PORT, () => {
