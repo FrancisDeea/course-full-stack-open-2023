@@ -34,6 +34,17 @@ app.use(express.json())
 
 app.post('/api/persons', (request, response) => {
     const body = request.body;
+    const findName = persons.find(person => person.name === body.name)
+
+    if (!body.name) {
+        return response.status(400).json({"error": "Name missing"})
+    }
+    if (!body.number) {
+        return response.status(400).json({"error": "Number missing"})
+    }
+    if (findName) {
+        return response.status(400).json({"error": "This person is already in database."})
+    }
 
     const person = {
         name: body.name,
