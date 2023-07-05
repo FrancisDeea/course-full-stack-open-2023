@@ -8,3 +8,15 @@ Content-Type: application/json
     "name": "Francis",
     "number": "123-456"
 }
+
+###
+DELETE https://phonedirectory-backend-ce77ed877677.herokuapp.com/api/persons/3
+
+###
+POST https://phonedirectory-backend-ce77ed877677.herokuapp.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "Francis",
+    "number": "123-456"
+}
