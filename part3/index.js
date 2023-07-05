@@ -2,7 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
-const PORT = 3001;
+require('dotenv').config();
+const PORT = process.env.PORT || 3001;
 
 const generateId = () => {
     const maxId = Math.max(...persons.map(person => person.id))
