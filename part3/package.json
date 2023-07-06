@@ -10,7 +10,6 @@
     "build:ui": "rm -r build && cd ../part2/phonedirectory && rm -r build && npm run build --prod && cp -r build ../../part3/",
     "deploy": "cd .. && git subtree push --prefix part3 heroku main",
     "deploy:full": "npm run build:ui && npm run deploy"
-
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "mongoose": "^7.3.2",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
