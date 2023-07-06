@@ -1,9 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
-require('dotenv').config();
-const PORT = process.env.PORT || 3001;
+
+const Person = require('./models/person');
 
 const generateId = () => {
     const maxId = Math.max(...persons.map(person => person.id))
@@ -71,7 +72,10 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person
+        .find({})
+        .then(result => response.json(result))
+        .catch(error => console.log(error))
 })
 
 app.get('/api/info', (request, response) => {
@@ -92,6 +96,7 @@ app.get('/api/persons/:id', (request, response) => {
     response.json(find)
 })
 
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`)
 })
