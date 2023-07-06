@@ -5,6 +5,7 @@ const cors = require('cors');
 const app = express();
 
 const Person = require('./models/person');
+const person = require('./models/person');
 
 const generateId = () => {
     const maxId = Math.max(...persons.map(person => person.id))
@@ -42,26 +43,31 @@ app.use(express.static('build'))
 
 app.post('/api/persons', (request, response) => {
     const body = request.body;
-    const findName = persons.find(person => person.name === body.name)
 
     if (!body.name) {
-        return response.status(400).json({"error": "Name missing"})
+        return response.status(400).json({ "error": "Name missing" })
     }
     if (!body.number) {
-        return response.status(400).json({"error": "Number missing"})
-    }
-    if (findName) {
-        return response.status(400).json({"error": "This person is already in database."})
+        return response.status(400).json({ "error": "Number missing" })
     }
 
-    const person = {
+    Person
+        .find({ "name": body.name })
+        .then(result => {
+            return response.status(400).json({ "error": "This person already exists in database" })
+        })
+        .catch(error => console.log(error.message))
+
+    const person = new Person({
         name: body.name,
-        number: body.number,
-        id: generateId()
-    }
+        number: body.number
+    })
 
-    persons = persons.concat(person);
-    response.json(person)
+    person.save().then(result => {
+        console.log(`${result.name} was added to database successfully`)
+        response.json(result)
+    })
+
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -89,8 +95,8 @@ app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id);
     const find = persons.find(person => person.id === id);
 
-    if(!find) {
-        return response.status(404).json({error: "Person not found"})
+    if (!find) {
+        return response.status(404).json({ error: "Person not found" })
     }
 
     response.json(find)
