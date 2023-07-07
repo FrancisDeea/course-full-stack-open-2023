@@ -52,22 +52,17 @@ app.post('/api/persons', (request, response, next) => {
         return response.status(400).json({ "error": "Number missing" })
     }
 
-    Person
-        .find({ "name": body.name })
-        .then(result => {
-            return response.status(400).json({ "error": "This person already exists in database" })
-        })
-        .catch(error => next(error))
-
     const person = new Person({
         name: body.name,
         number: body.number
     })
 
-    person.save().then(result => {
-        console.log(`${result.name} was added to database successfully`)
-        response.json(result)
-    })
+    person.save()
+        .then(result => {
+            console.log(`${result.name} was added to database successfully`)
+            response.json(result)
+        })
+        .catch(error => next)
 
 })
 
@@ -125,7 +120,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
 
 const unknownEndpoint = (request, response) => {
-    response.status(404).send({"error": "unknown endpoint"})
+    response.status(404).send({ "error": "unknown endpoint" })
 }
 
 app.use(unknownEndpoint)
