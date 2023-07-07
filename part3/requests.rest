@@ -10,6 +10,9 @@ Content-Type: application/json
 }
 
 ###
+GET http://localhost:3001/api/persons/64a722de1d64fbdab179a5f4
+
+###
 DELETE https://phonedirectory-backend-ce77ed877677.herokuapp.com/api/persons/3
 
 ###

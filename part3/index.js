@@ -42,7 +42,7 @@ app.use(morgan(':method :url :res[content-length] - :response-time ms :body'))
 
 app.use(cors())
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body;
 
     if (!body.name) {
@@ -57,7 +57,7 @@ app.post('/api/persons', (request, response) => {
         .then(result => {
             return response.status(400).json({ "error": "This person already exists in database" })
         })
-        .catch(error => console.log(error.message))
+        .catch(error => next(error))
 
     const person = new Person({
         name: body.name,
@@ -69,6 +69,22 @@ app.post('/api/persons', (request, response) => {
         response.json(result)
     })
 
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body;
+
+    const person = {
+        "name": body.name,
+        "number": body.number
+    }
+
+    Person
+        .findByIdAndUpdate(request.params.id, person, { new: true })
+        .then(updatedPerson => {
+            response.json(updatedPerson)
+        })
+        .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -88,29 +104,37 @@ app.get('/api/persons', (request, response) => {
         .catch(error => console.log(error))
 })
 
-app.get('/api/info', (request, response) => {
+app.get('/api/info', async (request, response, next) => {
     const date = new Date();
-    const totalPersons = persons.length;
+    const totalPersons = await Person.estimatedDocumentCount();
 
     response.send(`<p>Phonebook has info for ${totalPersons}.</p> <p>${date}</p>`)
 })
 
-app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id);
-    const find = persons.find(person => person.id === id);
-
-    if (!find) {
-        return response.status(404).json({ error: "Person not found" })
-    }
-
-    response.json(find)
+app.get('/api/persons/:id', (request, response, next) => {
+    Person
+        .findById(request.params.id)
+        .then(note => {
+            if (note) {
+                return response.json(note)
+            } else {
+                response.status(404).end()
+            }
+        })
+        .catch(error => next(error))
 })
+
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({"error": "unknown endpoint"})
+}
+
+app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
 
     if (error.name === "CastError") {
-        return response.status(400).send({"error": "malformatted id"})
+        return response.status(400).send({ "error": "malformatted id" })
     }
 
     next(error)
