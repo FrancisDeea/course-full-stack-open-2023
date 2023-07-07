@@ -5,7 +5,6 @@ const cors = require('cors');
 const app = express();
 
 const Person = require('./models/person');
-const person = require('./models/person');
 
 const generateId = () => {
     const maxId = Math.max(...persons.map(person => person.id))
@@ -35,11 +34,13 @@ let persons = [
     }
 ]
 
+app.use(express.static('build'))
+app.use(express.json())
+
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 app.use(morgan(':method :url :res[content-length] - :response-time ms :body'))
-app.use(express.json())
+
 app.use(cors())
-app.use(express.static('build'))
 
 app.post('/api/persons', (request, response) => {
     const body = request.body;
@@ -70,11 +71,14 @@ app.post('/api/persons', (request, response) => {
 
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id);
-    persons = persons.filter(person => person.id !== id);
-
-    response.status(204).end();
+app.delete('/api/persons/:id', (request, response, next) => {
+    Person
+        .findByIdAndRemove(request.params.id)
+        .then(result => {
+            console.log("This person was deleted from database successfully: ", result)
+            response.status(204).end()
+        })
+        .catch(error => next(error))
 })
 
 app.get('/api/persons', (request, response) => {
@@ -101,6 +105,18 @@ app.get('/api/persons/:id', (request, response) => {
 
     response.json(find)
 })
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === "CastError") {
+        return response.status(400).send({"error": "malformatted id"})
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
