@@ -45,10 +45,9 @@ const App = () => {
         setTimeout(() => setNotification(null), 5000)
       })
       .catch(error => {
-        console.log(error)
-        setNotification({ error: `${newPerson.name} has already been removed from server` })
+        console.log(error.response.data)
+        setNotification({ error: `${error.response.data.error}`})
         setTimeout(() => setNotification(null), 5000)
-        setPersons(persons.filter(person => person.id !== id))
       })
 
     setNewName("");
@@ -63,8 +62,8 @@ const App = () => {
     if (findPerson && findPerson.number === newNumber) return alert(`${newName} is already added to phonebook`)
 
     if (findPerson && findPerson.number !== newNumber) {
-      const newPerson = { ...findPerson, number: newNumber }
       if (window.confirm(`${findPerson.name} is already added to phonebook, replace the old number with a new one?`)) {
+        const newPerson = { ...findPerson, number: newNumber }
         return handleUpdate(findPerson.id, newPerson)
       }
     }
@@ -80,7 +79,11 @@ const App = () => {
         setNotification({ success: `${createdPerson.name} was added to phonebook successfully` })
         setTimeout(() => setNotification(null), 5000)
       })
-      .catch(error => console.log(error))
+      .catch(error => {
+        console.log(error.response.data)
+        setNotification({ error: `${error.response.data.error}`})
+        setTimeout(() => setNotification(null), 5000)
+      })
 
 
 

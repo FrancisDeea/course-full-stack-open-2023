@@ -10,12 +10,23 @@ mongoose
   .then(result => console.log("Connected to database successfully"))
   .catch(error => console.log("Error in connection", error.message))
 
+const numberValidator = [
+  {
+    validator: (number) => {
+      const regex = /(?=\S{8,})(^(\d+-?)+\d+$)/g
+      return regex.test(number)
+    },
+    msg: "Number must have 8 digits (hyphens inclusive)"
+  }
+]
+
+
 const personSchema = new mongoose.Schema({
   "name": {
-    "type": String, required: true, unique: true
+    "type": String, required: true, unique: true, minLength: 3
   },
   "number": {
-    "type": String, required: true, unique: true
+    "type": String, required: true, unique: true, validate: numberValidator
   }
 })
 
