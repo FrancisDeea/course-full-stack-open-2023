@@ -1,4 +1,4 @@
-const totalLikes = require('../utils/list_helper').totalLikes;
+const listHelper = require('../utils/list_helper');
 
 const blogs = [
     {
@@ -64,19 +64,53 @@ const oneBlog = [
     }
 ]
 
-describe('totalLikes', () => {
+test('dummy returns one', () => {
+    const blogs = [];
+    const result = listHelper.dummy(blogs)
+
+    expect(result).toBe(1);
+})
+
+describe('total likes', () => {
     test('of empty list is 0', () => {
-        const result = totalLikes(emptyList)
+        const result = listHelper.totalLikes(emptyList)
         expect(result).toBe(0)
     })
 
     test('when list only has one blog, equals the likes of that', () => {
-        const result = totalLikes(oneBlog)
+        const result = listHelper.totalLikes(oneBlog)
         expect(result).toBe(2)
     })
 
     test('of a bigger list is calculated right', () => {
-        const result = totalLikes(blogs)
+        const result = listHelper.totalLikes(blogs)
         expect(result).toBe(36)
+    })
+})
+
+describe.only('favorite blog', () => {
+    test('of empty list is null', () => {
+        const result = listHelper.favoriteBlog(emptyList)
+        expect(result).toEqual(null)
+    })
+
+    test('when list only has one blog, equals the only blog of that', () => {
+        const expected = {
+            title: "Type wars",
+            author: "Robert C. Martin",
+            likes: 2,
+        }
+        const result = listHelper.favoriteBlog(oneBlog)
+        expect(result).toEqual(expected)
+    })
+
+    test('of a bigger list is calculated right', () => {
+        const expected = {
+            title: "Canonical string reduction",
+            author: "Edsger W. Dijkstra",
+            likes: 12,
+        }
+        const result = listHelper.favoriteBlog(blogs)
+        expect(result).toEqual(expected)
     })
 })
