@@ -1,12 +1,14 @@
-const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require('mongoose')
+const uniqueValidator = require('mongoose-unique-validator')
 
-const url = process.env.MONGO_URI;
+// eslint-disable-next-line no-undef
+const url = process.env.MONGO_URI
 
 console.log("Connecting to MongoDB...")
 
 mongoose
   .connect(url)
+  // eslint-disable-next-line no-unused-vars
   .then(result => console.log("Connected to database successfully"))
   .catch(error => console.log("Error in connection", error.message))
 
