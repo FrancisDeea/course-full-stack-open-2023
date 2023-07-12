@@ -34,4 +34,21 @@ const mostFamous = (blogs) => {
     }
 }
 
-module.exports = { dummy, totalLikes, favoriteBlog, mostFamous }
+const mostLikes = (blogs) => {
+    if (blogs.length < 1) return null;
+
+    const authorsAndLikes = blogs.reduce((obj, blog) => {
+        if (blog.author in obj) { obj[blog.author] += blog.likes }
+        else {obj[blog.author] = blog.likes}
+        return obj
+    }, {})
+    const maxLikes = Math.max(...Object.values(authorsAndLikes))
+    const mostLikesAuthor = Object.keys(authorsAndLikes).find(author => authorsAndLikes[author] === maxLikes)
+
+    return {
+        author: mostLikesAuthor,
+        likes: maxLikes
+    }
+}
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostFamous, mostLikes }

@@ -116,7 +116,7 @@ describe('favorite blog', () => {
 })
 
 describe('Most famous author', () => {
-    test('of empty list is null???', () => {
+    test('of empty list is null', () => {
         const expected = null
         const result = listHelper.mostFamous(emptyList)
         expect(result).toEqual(expected)
@@ -137,6 +137,32 @@ describe('Most famous author', () => {
             blogs: 3
         }
         const result = listHelper.mostFamous(blogs)
+        expect(result).toEqual(expected)
+    })
+})
+
+describe('Most author likes', () => {
+    test('of empty list is null', () => {
+        const result = listHelper.mostLikes(emptyList);
+        const expected = null
+        expect(result).toEqual(expected)
+    })
+
+    test('when list only has one blog, equals the only blog of that', () => {
+        const result = listHelper.mostLikes(oneBlog);
+        const expected = {
+            author: "Robert C. Martin",
+            likes: 2
+        }
+        expect(result).toEqual(expected)
+    })
+
+    test('of a bigger list is calculated right', () => {
+        const result = listHelper.mostLikes(blogs);
+        const expected = {
+            author: "Edsger W. Dijkstra",
+            likes: 17
+        }
         expect(result).toEqual(expected)
     })
 })
