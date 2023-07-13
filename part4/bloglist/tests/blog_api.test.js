@@ -68,6 +68,22 @@ test('a new blog is created without likes property', async () => {
     expect(response[response.length - 1].likes).toBe(0)
 })
 
+test('a new blog is created without title or url property (required)', async () => {
+    const newBlog = {
+        "author": "Francis",
+        "likes": 1
+    }
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(testHelper.initialBlogs.length)
+
+}, 100000)
+
 afterAll(() => {
     mongoose.connection.close();
 })
