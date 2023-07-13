@@ -32,6 +32,25 @@ test('blog has id default property defined', async () => {
     }
 })
 
+test('a new blog is created and added to database', async () => {
+    const newBlog = {
+        "title": "Hello World 4",
+        "author": "Francis",
+        "url": "localhost",
+        "likes": 2
+    }
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(testHelper.initialBlogs.length + 1)
+    expect(response.body.map(blog => blog.title)).toContain('Hello World 4')
+
+})
+
 afterAll(() => {
     mongoose.connection.close();
 })
