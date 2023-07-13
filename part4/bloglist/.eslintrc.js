@@ -22,7 +22,7 @@ module.exports = {
         "ecmaVersion": "latest"
     },
     "jest": {
-        "testEnvironment": "node"
+        "testEnvironment": "node",
     },
     "rules": {
     }
