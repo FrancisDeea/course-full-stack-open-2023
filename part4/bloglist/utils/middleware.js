@@ -7,6 +7,10 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).send({ error: error.message })
     }
 
+    if (error.name === "CastError") {
+        return response.status(400).json({ error: "malFormatted id. Enter a correct id" })
+    }
+
     next(error)
 }
 
