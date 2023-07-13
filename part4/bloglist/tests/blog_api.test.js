@@ -24,6 +24,14 @@ test('all blogs are returned as json', async () => {
     expect(response.body).toHaveLength(testHelper.initialBlogs.length)
 })
 
+test('blog has id default property defined', async () => {
+    const response = await api.get('/api/blogs')
+    const ids = response.body.map(blog => blog.id)
+    for (let id of ids) {
+        expect(id).toBeDefined()
+    }
+})
+
 afterAll(() => {
     mongoose.connection.close();
 })
