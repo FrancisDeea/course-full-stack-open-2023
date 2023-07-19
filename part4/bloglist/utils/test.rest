@@ -25,3 +25,26 @@ DELETE http://localhost:3001/api/blogs/64adb1b81a477d679dd275a4
 
 ###
 DELETE http://localhost:3001/api/blogs/64adb1b81a477dd275a4
+
+###
+PUT http://localhost:3001/api/blogs/64adaff3eab98b6a7f71827e
+Content-Type: application/json
+
+{
+    "likes" : 99,
+    "author": "Andreea",
+    "title": "jajajaja"
+}
+
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+    "username": "Francis",
+    "name": "Francis Bernal Cabra",
+    "password": "test123"
+}
+
+###
+GET http://localhost:3001/api/users

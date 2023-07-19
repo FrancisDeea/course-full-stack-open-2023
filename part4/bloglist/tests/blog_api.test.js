@@ -14,75 +14,80 @@ beforeEach(async () => {
         await newBlog.save()
     }
 })
+describe('when a GET HTTP request is sent', () => {
+    test('all blogs are returned as json', async () => {
+        const response = await api
+            .get('/api/blogs')
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
 
-test('all blogs are returned as json', async () => {
-    const response = await api
-        .get('/api/blogs')
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
+        expect(response.body).toHaveLength(testHelper.initialBlogs.length)
+    })
 
-    expect(response.body).toHaveLength(testHelper.initialBlogs.length)
+    test('blog has id as default property defined (and not _id)', async () => {
+        const response = await api.get('/api/blogs')
+        const ids = response.body.map(blog => blog.id)
+        for (let id of ids) {
+            expect(id).toBeDefined()
+        }
+    })
 })
 
-test('blog has id default property defined', async () => {
-    const response = await api.get('/api/blogs')
-    const ids = response.body.map(blog => blog.id)
-    for (let id of ids) {
-        expect(id).toBeDefined()
-    }
+describe('when a POST HTTP request is sent', () => {
+    test('a new blog is created and added to database', async () => {
+        const newBlog = {
+            "title": "Hello World 4",
+            "author": "Francis",
+            "url": "localhost",
+            "likes": 2
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const response = await api.get('/api/blogs')
+        expect(response.body).toHaveLength(testHelper.initialBlogs.length + 1)
+        expect(response.body.map(blog => blog.title)).toContain('Hello World 4')
+
+    })
+
+    test('a new blog is created without likes property', async () => {
+        const newBlog = {
+            "title": "Hello World 5",
+            "author": "Francis",
+            "url": "localhost",
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const response = (await api.get('/api/blogs')).body
+        expect(response).toHaveLength(testHelper.initialBlogs.length + 1)
+        expect(response[response.length - 1].likes).toBe(0)
+    })
+
+    test('a new blog is created without title or url property (required)', async () => {
+        const newBlog = {
+            "author": "Francis",
+            "likes": 1
+        }
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        const response = await api.get('/api/blogs')
+        expect(response.body).toHaveLength(testHelper.initialBlogs.length)
+
+    }, 100000)
 })
 
-test('a new blog is created and added to database', async () => {
-    const newBlog = {
-        "title": "Hello World 4",
-        "author": "Francis",
-        "url": "localhost",
-        "likes": 2
-    }
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
 
-    const response = await api.get('/api/blogs')
-    expect(response.body).toHaveLength(testHelper.initialBlogs.length + 1)
-    expect(response.body.map(blog => blog.title)).toContain('Hello World 4')
-
-})
-
-test('a new blog is created without likes property', async () => {
-    const newBlog = {
-        "title": "Hello World 5",
-        "author": "Francis",
-        "url": "localhost",
-    }
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
-
-    const response = (await api.get('/api/blogs')).body
-    expect(response).toHaveLength(testHelper.initialBlogs.length + 1)
-    expect(response[response.length - 1].likes).toBe(0)
-})
-
-test('a new blog is created without title or url property (required)', async () => {
-    const newBlog = {
-        "author": "Francis",
-        "likes": 1
-    }
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-
-    const response = await api.get('/api/blogs')
-    expect(response.body).toHaveLength(testHelper.initialBlogs.length)
-
-}, 100000)
 
 describe('when a DELETE HTTP request is sent', () => {
     test('try to delete a blog with correct id', async () => {
