@@ -1,14 +1,19 @@
 ###
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyYW5jaXMiLCJpZCI6IjY0Yjg5NzdkMmQ2MDljYTgxYmI2MGQ5YSIsImlhdCI6MTY4OTgyMTEzMCwiZXhwIjoxNjg5ODI0NzMwfQ.kOZD9Fze8aePLfaChhryWK9e4Fzb4wT-k0_qRLVwsIo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyYW5jaXMiLCJpZCI6IjY0Yjg5NzdkMmQ2MDljYTgxYmI2MGQ5YSIsImlhdCI6MTY4OTg2ODQwNSwiZXhwIjoxNjg5ODcyMDA1fQ.HpFKw_2BhJQ7uCXG_rYWAoCt_gE2bSLXhe8x8IJH6xw
 
 {
-    "title": "Test 1",
-    "author": "Author 1",
+    "title": "Test for deleting",
+    "author": "Author 99",
     "url": "https://google.es",
-    "likes": 10
+    "likes": 0
 }
+
+###
+DELETE http://localhost:3001/api/blogs/64b95d5f87ab24fd8a634c6d
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyYW5jaXMiLCJpZCI6IjY0Yjg5NzdkMmQ2MDljYTgxYmI2MGQ5YSIsImlhdCI6MTY4OTg2ODQwNSwiZXhwIjoxNjg5ODcyMDA1fQ.HpFKw_2BhJQ7uCXG_rYWAoCt_gE2bSLXhe8x8IJH6xw
+
 
 ###
 POST http://localhost:3001/api/login
