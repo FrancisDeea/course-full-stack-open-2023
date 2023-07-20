@@ -5,7 +5,7 @@ require('express-async-errors')
 
 userRouter.post('/', async (request, response) => {
     const body = request.body
-    console.log(request)
+    
     if (body.password.length < 3) {
         return response.status(400).json({ error: "Password length must be at least 3 characters" })
     }
