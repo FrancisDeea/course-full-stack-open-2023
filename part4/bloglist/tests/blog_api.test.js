@@ -1,6 +1,9 @@
 const testHelper = require('../utils/test_helper')
 const mongoose = require('mongoose');
 const Blog = require('../models/blog');
+const User = require('../models/user');
+const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken')
 const supertest = require('supertest');
 const app = require('../app');
 
@@ -14,6 +17,7 @@ beforeEach(async () => {
         await newBlog.save()
     }
 })
+
 describe('when a GET HTTP request is sent', () => {
     test('all blogs are returned as json', async () => {
         const response = await api
@@ -34,23 +38,38 @@ describe('when a GET HTTP request is sent', () => {
 })
 
 describe('when a POST HTTP request is sent', () => {
+    let token = null
+    beforeAll(async () => {
+        await User.deleteMany({})
+        
+        const passwordHash = await bcryptjs.hash('test123', 10)
+        const user = await new User({"username": "Andreea", passwordHash}).save()
+
+        const userForToken = {"username": "Andreea", "id": user._id}
+        return (token = jwt.sign(userForToken, process.env.SECRET))
+    })
+
     test('a new blog is created and added to database', async () => {
-        const newBlog = {
-            "title": "Hello World 4",
-            "author": "Francis",
-            "url": "localhost",
-            "likes": 2
+        const blog = {
+            "title": "sending blog 1",
+            "author": "Andreea",
+            "url": "https://google.es",
+            "likes": 5
         }
+
         await api
             .post('/api/blogs')
-            .send(newBlog)
+            .set('Authorization', `Bearer ${token}`)
+            .send(blog)
             .expect(201)
-            .expect('Content-Type', /application\/json/)
+            .expect("Content-Type", /application\/json/)
 
-        const response = await api.get('/api/blogs')
-        expect(response.body).toHaveLength(testHelper.initialBlogs.length + 1)
-        expect(response.body.map(blog => blog.title)).toContain('Hello World 4')
+        const blogs = await testHelper.blogsInDb()
+        expect(blogs).toHaveLength(testHelper.initialBlogs.length + 1)
 
+        const titles = blogs.map(blog => blog.title)
+        expect(titles).toContain('sending blog 1')
+        
     })
 
     test('a new blog is created without likes property', async () => {
@@ -61,13 +80,14 @@ describe('when a POST HTTP request is sent', () => {
         }
         await api
             .post('/api/blogs')
+            .set("Authorization", `Bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/)
 
-        const response = (await api.get('/api/blogs')).body
-        expect(response).toHaveLength(testHelper.initialBlogs.length + 1)
-        expect(response[response.length - 1].likes).toBe(0)
+        const blogs = await testHelper.blogsInDb()
+        expect(blogs).toHaveLength(testHelper.initialBlogs.length + 1)
+        expect(blogs[blogs.length - 1].likes).toBe(0)
     })
 
     test('a new blog is created without title or url property (required)', async () => {
@@ -77,28 +97,73 @@ describe('when a POST HTTP request is sent', () => {
         }
         await api
             .post('/api/blogs')
+            .set("authorization", `Bearer ${token}`)
             .send(newBlog)
             .expect(400)
             .expect('Content-Type', /application\/json/)
 
-        const response = await api.get('/api/blogs')
-        expect(response.body).toHaveLength(testHelper.initialBlogs.length)
+        const blogs = await testHelper.blogsInDb()
+        expect(blogs).toHaveLength(testHelper.initialBlogs.length)
 
     }, 100000)
 })
 
 
-
 describe('when a DELETE HTTP request is sent', () => {
+    let token = null
+    beforeEach(async () => {
+        await User.deleteMany({})
+        await Blog.deleteMany({})
+
+        const passwordHash = await bcryptjs.hash("test123", 10)
+        const user = await new User({"username": "Andreea", passwordHash}).save()
+
+
+        const userForToken = {"username": "Andreea", "id": user.id}
+        token = jwt.sign(userForToken, process.env.SECRET)
+
+        const newBlog = {
+            "title": "Hello World 5",
+            "author": "Francis",
+            "url": "localhost",
+            "likes": 5
+        }
+
+        await api
+            .post('/api/blogs')
+            .set("Authorization", `Bearer ${token}`)
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        return token
+    })
+
     test('try to delete a blog with correct id', async () => {
-        const allBlogs = await testHelper.blogsInDb()
+        const allBlogs = await Blog.find({}).populate("user");
         const firstBlog = allBlogs[0]
+
         await api
             .delete(`/api/blogs/${firstBlog.id}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(204)
 
-        const finalBlogs = await testHelper.blogsInDb()
-        expect(finalBlogs).toHaveLength(testHelper.initialBlogs.length - 1)
+        const finalBlogs = await Blog.find({})
+        expect(finalBlogs).toHaveLength(allBlogs.length - 1)
+    })
+
+    test('try to delete a blog without token', async () => {
+        const blogsAtStart = await Blog.find({})
+        const blogToDelete = blogsAtStart[0]
+
+        token = null
+
+        await api
+            .delete(`/api/blogs/${blogToDelete.id}`)
+            .expect(401)
+
+        const blogsAtFinal = await Blog.find({})
+        expect(blogsAtFinal).toHaveLength(blogsAtStart.length)
     })
 
     test('try to delete a blog with malformatted id', async () => {
