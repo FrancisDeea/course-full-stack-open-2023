@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import { getAll, createBlog, setToken } from './services/blogs'
 import loginService from './services/login'
 
@@ -9,6 +10,14 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [newBlog, setNewBlog] = useState({ title: "", url: "", author: "", likes: 0 })
+  const [notification, setNotification] = useState(null)
+
+  const handleNotification = object => {
+    setNotification(object)
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
 
   const handleCreateForm = async (event) => {
     event.preventDefault()
@@ -16,8 +25,9 @@ const App = () => {
       const response = await createBlog(newBlog)
       setBlogs(blogs.concat(response))
       setNewBlog({ title: "", url: "", author: "", likes: 0 })
-      console.log(response)
+      handleNotification({ success: `A new blog was created: ${response.title} by ${response.author}` })
     } catch (error) {
+      handleNotification({ error: error.message })
       console.log(error)
     }
 
@@ -91,14 +101,18 @@ const App = () => {
       setPassword("")
       setToken(user.token)
       window.localStorage.setItem("user", JSON.stringify(user))
+      handleNotification({ success: "Logged in successfully!" })
     } catch (exception) {
-      console.log(exception.message)
+      setUsername("")
+      setPassword("")
+      handleNotification({ error: exception.response.data.error })
     }
   }
 
   const handleLogout = () => {
     setUser(null)
     window.localStorage.clear()
+    handleNotification({ success: "Logged out successfully!" })
   }
 
   useEffect(() => {
@@ -117,6 +131,8 @@ const App = () => {
 
   return (
     <>
+
+      <Notification notification={notification} />
       {
         user === null ?
           loginForm() :
