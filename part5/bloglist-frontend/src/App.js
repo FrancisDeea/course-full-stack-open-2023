@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import Blogs from './components/Blogs'
+import Togglable from './components/Togglable'
 import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -12,6 +13,8 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [notification, setNotification] = useState(null)
+
+  const createFormRef = useRef()
 
   const handleNotification = object => {
     setNotification(object)
@@ -42,7 +45,9 @@ const App = () => {
           <LoginForm handleUser={(user) => setUser(user)} handleNotification={(obj) => handleNotification(obj)} /> :
           <>
             <Logout user={user} handleUser={(user) => setUser(user)} handleNotification={(obj) => handleNotification(obj)} />
-            <CreateForm handleNotification={(obj) => handleNotification(obj)} handleBlogs={(newBlog) => setBlogs(blogs.concat(newBlog))} />
+            <Togglable label="Create new blog" ref={createFormRef}>
+              <CreateForm reference={createFormRef} handleNotification={(obj) => handleNotification(obj)} handleBlogs={(newBlog) => setBlogs(blogs.concat(newBlog))} />
+            </Togglable>
             <Blogs blogs={blogs} />
           </>
       }

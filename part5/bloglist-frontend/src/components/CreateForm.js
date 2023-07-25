@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createBlog } from '../services/blogs'
 
-const CreateForm = ({ handleNotification, handleBlogs }) => {
+const CreateForm = ({ handleNotification, handleBlogs, reference }) => {
     const [newBlog, setNewBlog] = useState({ title: "", url: "", author: "", likes: 0 })
 
     const handleChange = (target) => {
@@ -12,6 +12,7 @@ const CreateForm = ({ handleNotification, handleBlogs }) => {
         event.preventDefault()
         try {
             const response = await createBlog(newBlog)
+            reference.current.toggleVisibility()
             handleBlogs(response)
             setNewBlog({ title: "", url: "", author: "", likes: 0 })
             handleNotification({ success: `A new blog was created: ${response.title} by ${response.author}` })
