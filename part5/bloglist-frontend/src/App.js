@@ -7,7 +7,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Logout from './components/Logout'
 
-import { getAll, setToken } from './services/blogs'
+import { getAll, setToken, updateBlog } from './services/blogs'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -21,6 +21,16 @@ const App = () => {
     setTimeout(() => {
       setNotification(null)
     }, 5000)
+  }
+
+  const handleLikes = async (newBlog, id) => {
+    try {
+      const updated = await updateBlog(newBlog, id)
+      const newBlogs = blogs.map(blog => blog.id === id ? updated : blog)
+      setBlogs(newBlogs)
+    } catch (exception) {
+      handleNotification({ error: exception.response.data.error })
+    }
   }
 
   useEffect(() => {
@@ -48,7 +58,7 @@ const App = () => {
             <Togglable label="Create new blog" ref={createFormRef}>
               <CreateForm reference={createFormRef} handleNotification={(obj) => handleNotification(obj)} handleBlogs={(newBlog) => setBlogs(blogs.concat(newBlog))} />
             </Togglable>
-            <Blogs blogs={blogs} />
+            <Blogs blogs={blogs} handleLikes={handleLikes} />
           </>
       }
     </>
