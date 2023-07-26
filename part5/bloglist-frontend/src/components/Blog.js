@@ -31,7 +31,7 @@ const Blog = ({ blog, handleLikes, handleDelete, user }) => {
               {blog.title}{" "}
               <button onClick={handleVisibility}>Hide</button><br />
               <span className="url">{blog.url}</span><br />
-              likes: {blog.likes}{" "}
+              <span className="likes">likes: {blog.likes}{" "}</span>
               <button onClick={updateLikes}>like</button><br />
               {blog.author}<br />
               {
@@ -45,7 +45,7 @@ const Blog = ({ blog, handleLikes, handleDelete, user }) => {
             <>
               <span className='title'>{blog.title}</span>
               <span className='author'>by: {blog.author}</span>
-              <button onClick={handleVisibility}> Show</button >
+              <button onClick={handleVisibility}>Show</button >
             </>
           )
       }
