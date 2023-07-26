@@ -1,6 +1,6 @@
 import Blog from './Blog'
 
-const Blogs = ({ blogs, handleLikes }) => {
+const Blogs = ({ blogs, handleLikes, handleDelete, user }) => {
 
     return (
         <div>
@@ -8,7 +8,7 @@ const Blogs = ({ blogs, handleLikes }) => {
             {blogs
                 .sort((a, b) => b.likes - a.likes)
                 .map(blog =>
-                    <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
+                    <Blog key={blog.id} blog={blog} handleLikes={handleLikes} handleDelete={handleDelete} user={user} />
                 )}
         </div>
     )

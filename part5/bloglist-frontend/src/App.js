@@ -7,7 +7,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Logout from './components/Logout'
 
-import { getAll, setToken, updateBlog } from './services/blogs'
+import { getAll, setToken, updateBlog, deleteBlog } from './services/blogs'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -30,6 +30,24 @@ const App = () => {
       setBlogs(newBlogs)
     } catch (exception) {
       handleNotification({ error: exception.response.data.error })
+    }
+  }
+
+  const handleDelete = async (id, title, author) => {
+    try {
+      if (window.confirm(`Remove the blog "${title}"rs written by: ${author}`)) {
+        await deleteBlog(id)
+        const newBlogs = blogs.filter(blog => blog.id !== id)
+        setBlogs(newBlogs)
+        handleNotification({success: "Deleted succesfully!"})
+      }
+    } catch (exception) {
+      const message = exception.response.data.error
+      handleNotification({ error: message })
+      if (message.includes('expired')) {
+        setUser(null)
+        window.localStorage.clear()
+      }
     }
   }
 
@@ -58,7 +76,7 @@ const App = () => {
             <Togglable label="Create new blog" ref={createFormRef}>
               <CreateForm reference={createFormRef} handleNotification={(obj) => handleNotification(obj)} handleBlogs={(newBlog) => setBlogs(blogs.concat(newBlog))} />
             </Togglable>
-            <Blogs blogs={blogs} handleLikes={handleLikes} />
+            <Blogs blogs={blogs} handleLikes={handleLikes} handleDelete={handleDelete} user={user} />
           </>
       }
     </>
