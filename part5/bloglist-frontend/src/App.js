@@ -39,7 +39,7 @@ const App = () => {
         await deleteBlog(id)
         const newBlogs = blogs.filter(blog => blog.id !== id)
         setBlogs(newBlogs)
-        handleNotification({success: "Deleted succesfully!"})
+        handleNotification({ success: "Deleted succesfully!" })
       }
     } catch (exception) {
       const message = exception.response.data.error
