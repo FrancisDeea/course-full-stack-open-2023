@@ -23,14 +23,14 @@ const Blog = ({ blog, handleLikes, handleDelete, user }) => {
   }
 
   return (
-    <div style={style}>
+    <div style={style} className="blogDiv">
       {
         visible ?
           (
             <>
               {blog.title}{" "}
               <button onClick={handleVisibility}>Hide</button><br />
-              {blog.url}<br />
+              <span className="url">{blog.url}</span><br />
               likes: {blog.likes}{" "}
               <button onClick={updateLikes}>like</button><br />
               {blog.author}<br />
@@ -43,7 +43,8 @@ const Blog = ({ blog, handleLikes, handleDelete, user }) => {
           ) :
           (
             <>
-              {blog.title}{" "}
+              <span className='title'>{blog.title}</span>
+              <span className='author'>by: {blog.author}</span>
               <button onClick={handleVisibility}> Show</button >
             </>
           )
