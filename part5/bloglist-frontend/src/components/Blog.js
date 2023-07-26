@@ -32,7 +32,7 @@ const Blog = ({ blog, handleLikes, handleDelete, user }) => {
               <button onClick={handleVisibility}>Hide</button><br />
               <span className="url">{blog.url}</span><br />
               <span className="likes">likes: {blog.likes}{" "}</span>
-              <button onClick={updateLikes}>like</button><br />
+              <button className="likeButton" onClick={updateLikes}>like</button><br />
               {blog.author}<br />
               {
                 username === blog.user.username

@@ -6,22 +6,24 @@ import Blog from './Blog'
 
 describe('testing <Blog /> component', () => {
     let component
-    beforeEach(() => {
-        const blog = {
-            "title": "Testing react component",
-            "author": "Francis",
-            "url": "https://github.com",
-            "likes": 1,
-            "user": {
-                "username": "Francis"
-            }
-        }
-
-        const user = {
+    const blog = {
+        "title": "Testing react component",
+        "author": "Francis",
+        "url": "https://github.com",
+        "likes": 1,
+        "user": {
             "username": "Francis"
         }
+    }
 
-        component = render(<Blog blog={blog} user={user} />)
+    const user = {
+        "username": "Francis"
+    }
+
+    const handleLikes = jest.fn()
+
+    beforeEach(() => {
+        component = render(<Blog blog={blog} user={user} handleLikes={handleLikes} />)
     })
 
     test('blog component renders default content (title and author)', () => {
@@ -44,6 +46,17 @@ describe('testing <Blog /> component', () => {
 
         expect(url).toBeDefined()
         expect(likes).toBeDefined()
+    })
+
+    test.only('clicking likes button twice, handleEvent is called twice', () => {
+        const showButton = component.container.querySelector('button')
+        fireEvent.click(showButton)
+
+        const likeButton = component.container.querySelector('.likeButton')
+        fireEvent.click(likeButton)
+        fireEvent.click(likeButton)
+
+        expect(handleLikes.mock.calls).toHaveLength(2)
     })
 })
 
