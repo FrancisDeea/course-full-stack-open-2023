@@ -46,6 +46,7 @@ module.exports = {
     "settings": {
         "react": {
             "version": "detect"
-        }
+        },
+        "eslint.workingDirectories": [{ "mode": "auto" }]
     }
 }
