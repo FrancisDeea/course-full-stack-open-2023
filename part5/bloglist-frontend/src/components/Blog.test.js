@@ -48,7 +48,7 @@ describe('testing <Blog /> component', () => {
         expect(likes).toBeDefined()
     })
 
-    test.only('clicking likes button twice, handleEvent is called twice', () => {
+    test('clicking likes button twice, handleEvent is called twice', () => {
         const showButton = component.container.querySelector('button')
         fireEvent.click(showButton)
 

@@ -7,7 +7,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Logout from './components/Logout'
 
-import { getAll, setToken, updateBlog, deleteBlog } from './services/blogs'
+import { getAll, setToken, updateBlog, deleteBlog, createBlog } from './services/blogs'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -51,6 +51,18 @@ const App = () => {
     }
   }
 
+  const handleBlogs = async (newBlog) => {
+    try {
+      const response = await createBlog(newBlog)
+      createFormRef.current.toggleVisibility()
+      setBlogs(blogs.concat(response))
+      handleNotification({ success: `A new blog was created: ${response.title} by ${response.author}` })
+    } catch (error) {
+      handleNotification({ error: error.message })
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("user")
     if (loggedUserJSON) {
@@ -74,7 +86,7 @@ const App = () => {
           <>
             <Logout user={user} handleUser={(user) => setUser(user)} handleNotification={(obj) => handleNotification(obj)} />
             <Togglable label="Create new blog" ref={createFormRef}>
-              <CreateForm reference={createFormRef} handleNotification={(obj) => handleNotification(obj)} handleBlogs={(newBlog) => setBlogs(blogs.concat(newBlog))} />
+              <CreateForm reference={createFormRef} handleNotification={(obj) => handleNotification(obj)} handleBlogs={handleBlogs} />
             </Togglable>
             <Blogs blogs={blogs} handleLikes={handleLikes} handleDelete={handleDelete} user={user} />
           </>
