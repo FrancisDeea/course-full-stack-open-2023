@@ -9,9 +9,10 @@ const cors = require('cors')
 const loginRouter = require('./controllers/login')
 const blogRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
-const deleteRouter = require('./controllers/restart')
 
 const mongoose = require('mongoose')
+
+console.log(config.MONGO_URI)
 
 mongoose
     .connect(config.MONGO_URI)
@@ -26,7 +27,11 @@ app.use(express.json())
 app.use('/api/login', loginRouter)
 app.use('/api/users', userRouter)
 app.use('/api/blogs', middleware.tokenExtractor, middleware.userExtractor, blogRouter)
-app.use('/api/restart', deleteRouter)
+
+if (process.env.NODE_ENV == "test") {
+    const deleteRouter = require('./controllers/testing')
+    app.use('/api/testing', deleteRouter)
+}
 
 app.use(middleware.errorHandler)
 
