@@ -3,7 +3,7 @@ const Blog = require('../models/blog')
 const deleteRouter = require('express').Router()
 require('express-async-errors')
 
-deleteRouter.get('/restart', async (request, response) => {
+deleteRouter.post('/restart', async (request, response) => {
     await User.deleteMany({})
     await Blog.deleteMany({})
 

@@ -5,14 +5,13 @@ const middleware = require('./utils/middleware');
 const express = require('express')
 const app = express()
 const cors = require('cors')
+require('express-async-errors')
 
 const loginRouter = require('./controllers/login')
 const blogRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
 
 const mongoose = require('mongoose')
-
-console.log(config.MONGO_URI)
 
 mongoose
     .connect(config.MONGO_URI)

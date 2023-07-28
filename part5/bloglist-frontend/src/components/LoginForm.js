@@ -30,7 +30,7 @@ const LoginForm = ({ handleNotification, handleUser }) => {
       <h2>Log in to application</h2>
       <form onSubmit={handleLogin}>
         <label>
-                    Username:{" "}
+          Username:{" "}
           <input
             type="text"
             value={username}
@@ -39,7 +39,7 @@ const LoginForm = ({ handleNotification, handleUser }) => {
         </label>
         {" "}
         <label>
-                    Passsword:{" "}
+          Passsword:{" "}
           <input
             type="password"
             value={password}
