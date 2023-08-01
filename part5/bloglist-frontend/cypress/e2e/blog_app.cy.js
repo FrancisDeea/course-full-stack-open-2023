@@ -58,7 +58,7 @@ describe('Testing E2E Blog app', function () {
     })
   })
 
-  describe.only('when a blog was created for user', function () {
+  describe('when a blog was created for user', function () {
     beforeEach(function () {
       cy.login({ username: 'admin', password: 'adminadmin' })
       cy.createBlog({ title: "E2E title", author: "E2E author", url: "E2E url" })
@@ -105,6 +105,21 @@ describe('Testing E2E Blog app', function () {
         .parent()
         .get('.deleteButton')
         .should('not.exist')
+    })
+  })
+
+  describe.only('when more than one blog were created', function () {
+    beforeEach(function () {
+      cy.login({ username: 'admin', password: 'adminadmin' })
+      cy.createBlog({ title: "E2E title", author: "E2E author", url: "E2E url" })
+      cy.createBlog({ title: "E2E title 2", author: "E2E author 2", url: "E2E url 2" })
+    })
+
+    it('the blogs with the most likes are sorted in descending order', function () {
+      cy.get('.blogDiv').eq(0).find('button').click().parent().get('.likeButton').click().parent().contains(/hide/i).click()
+      cy.get('.blogDiv').eq(1).find('button').click().parent().get('.likeButton').click().wait(500).click().parent().contains(/hide/i).click()
+
+      cy.get('.blogDiv').eq(0).contains(/e2e title 2/i)
     })
   })
 })
