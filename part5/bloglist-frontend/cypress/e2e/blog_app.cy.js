@@ -75,5 +75,36 @@ describe('Testing E2E Blog app', function () {
       cy.get('.likeButton').click()
       cy.contains(/likes: 1/)
     })
+
+    it('owner of blog can delete it', function () {
+      cy.contains(/e2e title/i)
+        .parent()
+        .find('button')
+        .click()
+
+      cy.get('.deleteButton').click()
+      cy.get('html').should('not.contain', /e2e title/i)
+    })
+
+    it('random user cannot delete a blog if it is not his own', function () {
+      cy.get('html').contains(/logout/i).click()
+
+      const user = {
+        "username": "anotherUser",
+        "name": "another",
+        "password": "adminadmin"
+      }
+
+      cy.request('POST', 'http://localhost:3003/api/users', user)
+      cy.visit('http://localhost:3000')
+      cy.login({ username: "anotherUser", password: "adminadmin" })
+
+      cy.contains(/e2e title/i)
+        .parent()
+        .find('button').click()
+        .parent()
+        .get('.deleteButton')
+        .should('not.exist')
+    })
   })
 })
