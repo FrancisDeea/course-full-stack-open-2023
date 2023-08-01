@@ -38,9 +38,9 @@ describe('Testing E2E Blog app', function () {
     })
   })
 
-  describe.only('when user is logged', function () {
+  describe('when user is logged', function () {
     beforeEach(function () {
-      cy.login({username: "admin", password: "adminadmin"})
+      cy.login({ username: "admin", password: "adminadmin" })
     })
 
     it('user can create a new blog', function () {
@@ -55,6 +55,25 @@ describe('Testing E2E Blog app', function () {
         .and('have.css', 'color', 'rgb(0, 128, 0)')
 
       cy.get('.blogDiv').contains('E2E title')
+    })
+  })
+
+  describe.only('when a blog was created for user', function () {
+    beforeEach(function () {
+      cy.login({ username: 'admin', password: 'adminadmin' })
+      cy.createBlog({ title: "E2E title", author: "E2E author", url: "E2E url" })
+    })
+
+    it('user can like a blog', function () {
+      cy.contains(/e2e title/i)
+        .parent()
+        .find('button')
+        .click()
+
+      cy.contains(/likes: 0/)
+
+      cy.get('.likeButton').click()
+      cy.contains(/likes: 1/)
     })
   })
 })
