@@ -37,4 +37,24 @@ describe('Testing E2E Blog app', function () {
         .and('have.css', 'color', 'rgb(255, 0, 0)')
     })
   })
+
+  describe.only('when user is logged', function () {
+    beforeEach(function () {
+      cy.login({username: "admin", password: "adminadmin"})
+    })
+
+    it('user can create a new blog', function () {
+      cy.contains(/create new blog/i).click()
+      cy.get('input[name="title"]').type('E2E title')
+      cy.get('input[name="author"]').type('E2E author')
+      cy.get('input[name="url"]').type('E2E url')
+      cy.get('button[type="submit"]').click()
+
+      cy.get('.notification')
+        .should('contain', 'A new blog was created')
+        .and('have.css', 'color', 'rgb(0, 128, 0)')
+
+      cy.get('.blogDiv').contains('E2E title')
+    })
+  })
 })
