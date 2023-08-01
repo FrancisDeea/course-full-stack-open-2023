@@ -7,7 +7,7 @@ deleteRouter.post('/restart', async (request, response) => {
     await User.deleteMany({})
     await Blog.deleteMany({})
 
-    response.status(204).send('<p>All data has been deleted successfully</p>')
+    response.status(204).end()
 })
 
 module.exports = deleteRouter

@@ -15,8 +15,8 @@ const Notification = ({ notification }) => {
   }
 
   if (!notification) return null
-  if (notification.success) return <div style={success}>{notification.success}</div>
-  if (notification.error) return <div style={error}>{notification.error}</div>
+  if (notification.success) return <div className="notification" style={success}>{notification.success}</div>
+  if (notification.error) return <div className="notification" style={error}>{notification.error}</div>
 
 }
 
