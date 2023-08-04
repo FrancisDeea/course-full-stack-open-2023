@@ -47,5 +47,12 @@ export const initialize = () => {
   }
 }
 
+export const createAnecdote = (content) => {
+  return async dispatch => {
+    const anecdote = await anecdoteServices.createAnecdote(content)
+    dispatch(create(anecdote))
+  }
+}
+
 
 export default anecdoteSlice.reducer
