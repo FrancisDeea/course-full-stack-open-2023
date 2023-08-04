@@ -12,5 +12,10 @@ const createAnecdote = async (content) => {
     return response.data
 }
 
+const updateAnecdote = async ({ id, votes }) => {
+    const response = await axios.patch(`${baseUrl}/${id}`, { votes: votes + 1 })
+    return response.data
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { getAll, createAnecdote } 
+export default { getAll, createAnecdote, updateAnecdote } 
