@@ -10,3 +10,8 @@ export const createAnecdote = async (anecdote) => {
     const response = await axios.post(baseUrl, anecdote)
     return response.data
 }
+
+export const updateAnecdote = async (anecdote) => {
+    const response = await axios.patch(`${baseUrl}/${anecdote.id}`, { votes: anecdote.votes + 1 })
+    return response.data
+}
