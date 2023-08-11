@@ -65,12 +65,18 @@ const CreateNew = (props) => {
   // const [content, setContent] = useState('')
   // const [author, setAuthor] = useState('')
   // const [info, setInfo] = useState('')
-  const author = useField('text', 'author')
-  const content = useField('text', 'content')
-  const info = useField('text', 'info')
+  const { reset: resetAuthor, ...author } = useField('text', 'author')
+  const { reset: resetContent, ...content } = useField('text', 'content')
+  const { reset: resetInfo, ...info } = useField('text', 'info')
 
   const navigate = useNavigate()
 
+  const handleReset = (e) => {
+    e.preventDefault()
+    resetAuthor()
+    resetContent()
+    resetInfo()
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -100,7 +106,8 @@ const CreateNew = (props) => {
           url for more info
           <input {...info} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
