@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, Routes, Route, useMatch } from 'react-router-dom'
+import { Link, Routes, Route, useMatch, useNavigate } from 'react-router-dom'
 
 const Menu = () => {
   const padding = {
@@ -23,13 +23,19 @@ const AnecdoteList = ({ anecdotes }) => (
   </div >
 )
 
-const Anecdote = ({ anecdote }) => (
+const Anecdote = ({ anecdote, handleVote }) => (
   <div>
     <h2>{anecdote.content} by: {anecdote.author}</h2>
     <p>This anecdote has {anecdote.votes} votes.</p>
     <p>For more info, please visit: <a href={anecdote.info}>{anecdote.info}</a></p>
+    <button onClick={() => handleVote(anecdote.id)}>Vote</button>
   </div>
 )
+
+const Notification = ({ notification }) => {
+  if (notification) return (<p>{notification}</p>)
+  if (!notification) return null
+}
 
 const About = () => (
   <div>
@@ -58,6 +64,8 @@ const CreateNew = (props) => {
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
+  const navigate = useNavigate()
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -67,6 +75,8 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    props.handleNotification(content)
+    navigate('/', { replace: true })
   }
 
   return (
@@ -136,14 +146,20 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
+  const handleNotification = (content) => {
+    setNotification(`A new anecdote ${content} created!`)
+    setTimeout(() => setNotification(""), 10000)
+  }
+
   return (
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification notification={notification} />
       <Routes>
-        <Route path="/notes/:id" element={<Anecdote anecdote={anecdote} />} />
+        <Route path="/notes/:id" element={<Anecdote anecdote={anecdote} handleVote={vote} />} />
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-        <Route path="/create" element={<CreateNew addNew={addNew} />} />
+        <Route path="/create" element={<CreateNew addNew={addNew} handleNotification={handleNotification} />} />
         <Route path="/about" element={<About />} />
       </Routes>
       <Footer />
