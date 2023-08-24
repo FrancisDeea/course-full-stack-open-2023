@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { handleNotification } from './reducers/notificationReducer'
+import { setUser } from './reducers/userReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 
 import Blogs from './components/Blogs'
@@ -15,7 +15,7 @@ import { setToken } from './services/blogs'
 
 const App = () => {
   const dispatch = useDispatch()
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user)
 
   const createFormRef = useRef()
 
@@ -23,7 +23,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("user")
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user))
       setToken(user.token)
     }
   }, [])
@@ -36,10 +36,11 @@ const App = () => {
     <>
       <Notification />
       {
-        user === null ?
-          <LoginForm handleUser={(user) => setUser(user)} handleNotification={(obj) => handleNotification(obj)} /> :
+        user === null
+          ? <LoginForm />
+          :
           <>
-            <Logout user={user} handleUser={(user) => setUser(user)} handleNotification={(obj) => handleNotification(obj)} />
+            <Logout user={user} />
             <Togglable label="Create new blog" ref={createFormRef}>
               <CreateForm reference={createFormRef} />
             </Togglable>

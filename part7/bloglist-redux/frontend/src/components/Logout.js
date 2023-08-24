@@ -1,13 +1,19 @@
-const Logout = ({ handleUser, handleNotification, user }) => {
+import { useDispatch } from "react-redux"
+import { setUser } from "../reducers/userReducer"
+import { handleNotification } from "../reducers/notificationReducer"
+
+const Logout = ({ user }) => {
+  const dispatch = useDispatch()
+
   const handleLogout = () => {
-    handleUser(null)
+    dispatch(setUser(null))
     window.localStorage.clear()
     handleNotification({ success: "Logged out successfully!" })
   }
 
   return (
     <div>
-      <span>{user.username} logged in!</span> <button onClick={handleLogout}>Logout</button>
+      <span>Welcome {user.username}!</span> <button onClick={handleLogout}>Logout</button>
     </div>
   )
 }

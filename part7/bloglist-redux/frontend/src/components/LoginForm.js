@@ -1,50 +1,40 @@
-import { useState } from 'react'
-import loginService from '../services/login'
-import { setToken } from '../services/blogs'
-import PropTypes from 'prop-types'
+import useField from '../hooks/useField'
+import { useDispatch } from 'react-redux'
+import { handleLogin } from '../reducers/userReducer'
 
-const LoginForm = ({ handleNotification, handleUser }) => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+// import PropTypes from 'prop-types'
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
+const LoginForm = () => {
+  const dispatch = useDispatch()
+  const { reset: resetUsername, ...username } = useField("text", "username")
+  const { reset: resetPassword, ...password } = useField("password", "password")
 
-    try {
-      const user = await loginService.login({ username, password })
-      handleUser(user)
-      setUsername("")
-      setPassword("")
-      setToken(user.token)
-      window.localStorage.setItem("user", JSON.stringify(user))
-      handleNotification({ success: "Logged in successfully!" })
-    } catch (exception) {
-      setUsername("")
-      setPassword("")
-      handleNotification({ error: exception.response.data.error })
+  const handleForm = async (e) => {
+    e.preventDefault()
+
+    const credentials = {
+      username: username.value,
+      password: password.value
     }
+
+    dispatch(handleLogin(credentials))
+
+    resetUsername()
+    resetPassword()
   }
 
   return (
     <div>
       <h2>Log in to application</h2>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleForm}>
         <label>
           Username:{" "}
-          <input
-            type="text"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
+          <input {...username} />
         </label>
         {" "}
         <label>
           Passsword:{" "}
-          <input
-            type="password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
+          <input {...password} />
         </label>
         {" "}
         <button type="submit">Log in</button>
@@ -53,9 +43,9 @@ const LoginForm = ({ handleNotification, handleUser }) => {
   )
 }
 
-LoginForm.propTypes = {
-  handleNotification: PropTypes.func.isRequired,
-  handleUser: PropTypes.func.isRequired
-}
+// LoginForm.propTypes = {
+//   handleNotification: PropTypes.func.isRequired,
+//   handleUser: PropTypes.func.isRequired
+// }
 
 export default LoginForm
