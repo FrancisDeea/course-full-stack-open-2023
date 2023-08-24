@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Routes, Route, useMatch } from 'react-router-dom'
@@ -7,13 +7,12 @@ import { setUser } from './reducers/userReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/usersReducer'
 
+import Header from './components/Header'
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
-import Togglable from './components/Togglable'
-import CreateForm from './components/CreateForm'
+
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import Logout from './components/Logout'
 import Users from './components/Users'
 import User from './components/User'
 
@@ -37,8 +36,6 @@ const App = () => {
     ? blogs.find(blog => blog.id === matchB.params.id)
     : null
 
-  const createFormRef = useRef()
-
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("user")
     if (loggedUserJSON) {
@@ -58,16 +55,13 @@ const App = () => {
 
   return (
     <>
-      <Notification />
       {
         user === null
           ? <LoginForm />
           :
           <>
-            <Logout user={user} />
-            <Togglable label="Create new blog" ref={createFormRef}>
-              <CreateForm reference={createFormRef} />
-            </Togglable>
+            <Header />
+            <Notification />
 
             <Routes>
               <Route path="/" element={<Blogs blogs={blogs} />} />

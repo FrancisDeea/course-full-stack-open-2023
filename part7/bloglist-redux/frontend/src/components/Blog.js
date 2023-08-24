@@ -1,8 +1,10 @@
 import { useDispatch } from 'react-redux'
 import { updateBlog, removeBlog } from '../reducers/blogReducer'
+import { useNavigate } from 'react-router-dom'
 
 const Blog = ({ blog, user }) => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const username = user.username
 
   const style = {
@@ -19,6 +21,7 @@ const Blog = ({ blog, user }) => {
   const deleteBlog = async () => {
     if (window.confirm(`Are you sure you want to remove the blog: "${blog.title}"`)) {
       dispatch(removeBlog(blog.id))
+      navigate('/')
     }
   }
 
