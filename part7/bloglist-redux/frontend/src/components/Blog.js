@@ -1,10 +1,8 @@
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { updateBlog, removeBlog } from '../reducers/blogReducer'
 
 const Blog = ({ blog, user }) => {
   const dispatch = useDispatch()
-  const [visible, setVisible] = useState(false)
   const username = user.username
 
   const style = {
@@ -12,8 +10,6 @@ const Blog = ({ blog, user }) => {
     "padding": 10,
     "marginBottom": 5
   }
-
-  const handleVisibility = () => setVisible(!visible)
 
   const updateLikes = () => {
     const newBlog = { ...blog, user: blog.user.id, likes: blog.likes + 1 }
@@ -26,34 +22,21 @@ const Blog = ({ blog, user }) => {
     }
   }
 
+  if (!blog) return null
+
   return (
-    <div style={style} className="blogDiv">
+    <article style={style} className="articleContainer">
+      <h2>{blog.title}</h2>
+      <p>Created by {blog.author}</p>
+      <p><a href={blog.url} target="_blank" rel="noreferrer">{blog.url}</a></p>
+      <span className="likes">Likes: {blog.likes}{" "}</span>
+      <button className="likeButton" onClick={updateLikes}>Like</button><br />
       {
-        visible ?
-          (
-            <>
-              {blog.title}{" "}
-              <button onClick={handleVisibility}>Hide</button><br />
-              <span className="url">{blog.url}</span><br />
-              <span className="likes">likes: {blog.likes}{" "}</span>
-              <button className="likeButton" onClick={updateLikes}>like</button><br />
-              {blog.author}<br />
-              {
-                username === blog.user.username
-                  ? <button className="deleteButton" onClick={deleteBlog}>Delete</button>
-                  : null
-              }
-            </>
-          ) :
-          (
-            <>
-              <span className='title'>{blog.title}</span>
-              <span className='author'>by: {blog.author}</span>
-              <button onClick={handleVisibility}>Show</button >
-            </>
-          )
+        username === blog.user.username
+          ? <button className="deleteButton" onClick={deleteBlog}>Delete</button>
+          : null
       }
-    </div >
+    </article >
   )
 }
 

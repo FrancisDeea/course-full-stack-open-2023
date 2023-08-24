@@ -8,6 +8,7 @@ import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/usersReducer'
 
 import Blogs from './components/Blogs'
+import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
@@ -20,17 +21,21 @@ import { setToken } from './services/blogs'
 
 const App = () => {
   const dispatch = useDispatch()
-  const match = useMatch('/users/:id')
+  const matchU = useMatch('/users/:id')
+  const matchB = useMatch('/blogs/:id')
 
   const user = useSelector(state => state.user)
   const users = useSelector(state => state.users)
+  const blogs = useSelector(state => state.blogs)
 
 
-  const matchedUser = match
-    ? users.find(user => user.id === match.params.id)
+  const matchedUser = matchU
+    ? users.find(user => user.id === matchU.params.id)
     : null
 
-  console.log(matchedUser)
+  const matchedBlog = matchB
+    ? blogs.find(blog => blog.id === matchB.params.id)
+    : null
 
   const createFormRef = useRef()
 
@@ -63,9 +68,10 @@ const App = () => {
             <Togglable label="Create new blog" ref={createFormRef}>
               <CreateForm reference={createFormRef} />
             </Togglable>
-            <Blogs user={user} />
 
             <Routes>
+              <Route path="/" element={<Blogs blogs={blogs} />} />
+              <Route path="/blogs/:id" element={<Blog user={user} blog={matchedBlog} />} />
               <Route path="/users" element={<Users users={users} />} />
               <Route path="/users/:id" element={<User user={matchedUser} />} />
             </Routes>
