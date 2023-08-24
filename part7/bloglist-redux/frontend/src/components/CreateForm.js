@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import { createNewBlog } from '../reducers/blogReducer'
 import { handleNotification } from '../reducers/notificationReducer'
 
-const CreateForm = () => {
+const CreateForm = ({ reference }) => {
   const dispatch = useDispatch()
   const { reset: resetTitle, ...title } = useField("text", "title")
   const { reset: resetAuthor, ...author } = useField("text", "author")
@@ -26,6 +26,8 @@ const CreateForm = () => {
     resetTitle()
     resetAuthor()
     resetUrl()
+
+    reference.current.toggleVisibility()
   }
 
   return (

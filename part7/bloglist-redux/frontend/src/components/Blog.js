@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { updateBlog, removeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, handleLikes, handleDelete, user }) => {
+const Blog = ({ blog, user }) => {
+  const dispatch = useDispatch()
   const [visible, setVisible] = useState(false)
   const username = user.username
 
@@ -13,13 +16,14 @@ const Blog = ({ blog, handleLikes, handleDelete, user }) => {
   const handleVisibility = () => setVisible(!visible)
 
   const updateLikes = () => {
-    const id = blog.id
     const newBlog = { ...blog, user: blog.user.id, likes: blog.likes + 1 }
-    handleLikes(newBlog, id)
+    dispatch(updateBlog(newBlog, blog.id))
   }
 
-  const deleteBlog = () => {
-    handleDelete(blog.id, blog.title, blog.author)
+  const deleteBlog = async () => {
+    if (window.confirm(`Are you sure you want to remove the blog: "${blog.title}"`)) {
+      dispatch(removeBlog(blog.id))
+    }
   }
 
   return (
