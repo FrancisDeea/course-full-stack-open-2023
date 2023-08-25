@@ -2,6 +2,9 @@ import { useDispatch } from 'react-redux'
 import { updateBlog, removeBlog } from '../reducers/blogReducer'
 import { useNavigate } from 'react-router-dom'
 
+import CreateComment from './CreateComment'
+import Comments from './Comments'
+
 const Blog = ({ blog, user }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -39,6 +42,8 @@ const Blog = ({ blog, user }) => {
           ? <button className="deleteButton" onClick={deleteBlog}>Delete</button>
           : null
       }
+      <CreateComment id={blog.id} />
+      <Comments comments={blog.comments} />
     </article >
   )
 }

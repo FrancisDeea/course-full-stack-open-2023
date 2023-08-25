@@ -30,6 +30,25 @@ blogRouter.post('/', async (request, response) => {
     response.status(201).json(populated)
 })
 
+blogRouter.post('/:id/comments', async (request, response) => {
+    const user = request.user
+    const blog = await Blog.findById(request.params.id)
+
+    console.log(request.body)
+
+    if (!user) return response.status(401).json({ error: "Unauthorizated user or token" })
+    if (!blog) return response.status(404).json({ error: 'Blog not found' })
+
+    blog.comments = blog.comments.concat(request.body)
+
+    const updatedBlog = await blog.save()
+
+    updatedBlog
+        ? response.status(200).json(updatedBlog)
+        : response.status(400).json({ error: 'Something was wrong with comment' })
+
+})
+
 blogRouter.delete('/:id', async (request, response) => {
     const user = request.user
     const blog = await Blog.findById(request.params.id)

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAll, createBlog, update, remove } from "../services/blogs";
+import { getAll, createBlog, update, remove, comment } from "../services/blogs";
 import { handleNotification } from "./notificationReducer";
 
 
@@ -60,6 +60,14 @@ export const removeBlog = (id) => {
                 window.localStorage.clear()
             }
         }
+    }
+}
+
+export const addComment = (obj, id) => {
+    return async dispatch => {
+        const commentedBlog = await comment(obj, id)
+        dispatch(updateBlogs(commentedBlog))
+        dispatch(handleNotification({ success: "Comment has added successfully!"}))
     }
 }
 

@@ -1,5 +1,5 @@
 const User = ({ user }) => {
-    console.log(user)
+
     if (!user) {
         return null
     }
