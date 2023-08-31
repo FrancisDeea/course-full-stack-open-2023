@@ -3,8 +3,8 @@ import { Link } from "react-router-dom"
 const Users = ({ users }) => {
 
     return (
-        <div>
-            <h2>Users</h2>
+        <div className="p-4">
+            <h2 className="mb-4">Users</h2>
             <table>
                 <thead>
                     <tr>

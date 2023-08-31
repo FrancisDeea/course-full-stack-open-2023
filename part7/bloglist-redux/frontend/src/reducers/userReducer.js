@@ -31,4 +31,12 @@ export const handleLogin = (credentials) => {
     }
 }
 
+export const handleLogout = (message) => {
+    return dispatch => {
+        dispatch(setUser(null))
+        dispatch(handleNotification({ error: message}))
+        window.localStorage.clear()
+    }
+}
+
 export default userSlice.reducer

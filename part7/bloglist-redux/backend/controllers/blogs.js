@@ -39,12 +39,19 @@ blogRouter.post('/:id/comments', async (request, response) => {
     if (!user) return response.status(401).json({ error: "Unauthorizated user or token" })
     if (!blog) return response.status(404).json({ error: 'Blog not found' })
 
-    blog.comments = blog.comments.concat(request.body)
+    const newComment = {
+        username: user.username,
+        ...request.body
+    }
+
+    blog.comments = blog.comments.concat(newComment)
 
     const updatedBlog = await blog.save()
 
+    const populated = await updatedBlog.populate('user', { username: 1, name: 1, id: 1 })
+
     updatedBlog
-        ? response.status(200).json(updatedBlog)
+        ? response.status(200).json(populated)
         : response.status(400).json({ error: 'Something was wrong with comment' })
 
 })

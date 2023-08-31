@@ -14,9 +14,12 @@ const CreateComment = ({ id }) => {
     }
 
     return (
-        <form onSubmit={handleForm}>
-            <input placeholder="Add a new comment..." {...comment} />
-            <button type="submit">Send!</button>
+        <form
+            onSubmit={handleForm}
+            className='flex gap-2'
+        >
+            <input className="w-[80%] h-8 inline-block border-none placeholder:font-semibold" placeholder="Add a new comment..." {...comment} />
+            <button className="w-[20%] h-8 bg-gray-200 rounded-lg" type="submit">Send!</button>
         </form>
     )
 }

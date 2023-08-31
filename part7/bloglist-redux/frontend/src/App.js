@@ -55,20 +55,21 @@ const App = () => {
 
   return (
     <>
+      <Notification />
       {
         user === null
           ? <LoginForm />
           :
           <>
             <Header />
-            <Notification />
-
-            <Routes>
-              <Route path="/" element={<Blogs blogs={blogs} />} />
-              <Route path="/blogs/:id" element={<Blog user={user} blog={matchedBlog} />} />
-              <Route path="/users" element={<Users users={users} />} />
-              <Route path="/users/:id" element={<User user={matchedUser} />} />
-            </Routes>
+            <main>
+              <Routes>
+                <Route path="/" element={<Blogs blogs={blogs} />} />
+                <Route path="/blogs/:id" element={<Blog user={user} blog={matchedBlog} />} />
+                <Route path="/users" element={<Users users={users} />} />
+                <Route path="/users/:id" element={<User user={matchedUser} />} />
+              </Routes>
+            </main>
           </>
       }
     </>

@@ -7,11 +7,14 @@ const usersSlice = createSlice({
     reducers: {
         setUsers(state, action) {
             return action.payload
+        },
+        updateUsers(state, action) {
+            
         }
     }
 })
 
-export const { setUsers } = usersSlice.actions
+export const { setUsers, updateUsers } = usersSlice.actions
 
 export const initializeUsers = () => {
     return async dispatch => {

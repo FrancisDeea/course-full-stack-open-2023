@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getAll, createBlog, update, remove, comment } from "../services/blogs";
 import { handleNotification } from "./notificationReducer";
-
+import { handleLogout } from "./userReducer";
+import { initializeUsers } from "./usersReducer";
 
 const blogSlice = createSlice({
     name: "blogs",
@@ -35,8 +36,22 @@ export const initializeBlogs = () => {
 
 export const createNewBlog = (obj) => {
     return async dispatch => {
-        const newBlog = await createBlog(obj)
-        dispatch(appendBlog(newBlog))
+        try {
+            const newBlog = await createBlog(obj)
+            dispatch(appendBlog(newBlog))
+            dispatch(initializeUsers())
+            dispatch(handleNotification({ success: `The new blog "${newBlog.title}" was created successfully!` }))
+        }
+
+        catch (error) {
+            console.log(error)
+            const messageErr = error.response.data.error
+            if (messageErr.includes("expired")) {
+                dispatch(handleLogout("Session expired. Log in again!"))
+            } else {
+                dispatch(handleNotification({ error: messageErr }))
+            }
+        }
     }
 }
 
@@ -52,12 +67,14 @@ export const removeBlog = (id) => {
         try {
             const response = await remove(id)
             dispatch(filterBlogs(id))
+            dispatch(initializeUsers())
             dispatch(handleNotification({ success: "Deleted successfully!" }))
         } catch (error) {
             const messageErr = error.response.data.error
-            dispatch(handleNotification({ error: messageErr }))
             if (messageErr.includes("expired")) {
-                window.localStorage.clear()
+                dispatch(handleLogout("Session expired. Log in again!"))
+            } else {
+                dispatch(handleNotification({ error: messageErr }))
             }
         }
     }
@@ -65,9 +82,19 @@ export const removeBlog = (id) => {
 
 export const addComment = (obj, id) => {
     return async dispatch => {
-        const commentedBlog = await comment(obj, id)
-        dispatch(updateBlogs(commentedBlog))
-        dispatch(handleNotification({ success: "Comment has added successfully!"}))
+        try {
+            const commentedBlog = await comment(obj, id)
+            dispatch(updateBlogs(commentedBlog))
+            dispatch(handleNotification({ success: "Comment has added successfully!" }))
+        }
+        catch (error) {
+            const messageErr = error.response.data.error
+            if (messageErr.includes("expired")) {
+                dispatch(handleLogout("Session expired. Log in again!"))
+            } else {
+                dispatch(handleNotification({ error: messageErr }))
+            }
+        }
     }
 }
 

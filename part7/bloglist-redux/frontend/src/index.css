@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    main {
+        @apply max-w-6xl m-auto
+    }
+    
+    h1, h2, h3 {
+        @apply text-3xl font-semibold
+    }
+
+    a {
+        @apply font-semibold
+    }
+
+    nav li {
+        @apply transition-transform hover:scale-110
+    }
+
+    button {
+        @apply btn
+    }
+
+    label {
+        @apply font-semibold
+    }
+
+    input {
+        @apply input
+    }
+
+    table {
+        @apply w-full max-w-xl border-collapse border border-slate-500 bg-slate-100
+    }
+
+    td {
+        @apply p-2 border border-slate-500
+    }
+
+}
+
+@layer components {
+    .btn {
+        @apply px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded font-semibold text-sm shadow-sm
+    }
+
+    .input {
+        @apply rounded-lg border-2 border-solid border-black block w-full py-1 px-2 focus:border-cyan-200
+    }
+
+}

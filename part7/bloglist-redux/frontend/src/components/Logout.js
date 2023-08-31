@@ -13,8 +13,14 @@ const Logout = () => {
   }
 
   return (
-    <div>
-      <span>Welcome {user.username}!</span> <button onClick={handleLogout}>Logout</button>
+    <div className="flex justify-center items-center gap-4">
+      <span className="font-semibold">Welcome {user.username}!</span>
+      <button
+        className="btn"
+        onClick={handleLogout}
+      >
+        Logout
+      </button>
     </div>
   )
 }

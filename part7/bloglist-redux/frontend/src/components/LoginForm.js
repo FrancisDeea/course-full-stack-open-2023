@@ -24,20 +24,20 @@ const LoginForm = () => {
   }
 
   return (
-    <div>
+    <div className="w-screen h-screen p-8 flex flex-col justify-center items-center gap-6">
       <h2>Log in to application</h2>
-      <form onSubmit={handleForm}>
+      <form onSubmit={handleForm} className="bg-orange-200 w-full max-w-xs p-4 rounded flex flex-col gap-4 shadow-md">
         <label>
           Username:{" "}
-          <input {...username} />
+          <input {...username} className='border-none' />
         </label>
         {" "}
         <label>
-          Passsword:{" "}
-          <input {...password} />
+          Password:{" "}
+          <input {...password} className='border-none' />
         </label>
         {" "}
-        <button type="submit">Log in</button>
+        <button type="submit" className='btn'>Log in</button>
       </form>
     </div>
   )

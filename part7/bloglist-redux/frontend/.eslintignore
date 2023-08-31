@@ -1,6 +1,7 @@
 node_modules
 build
 .eslintrc.js
+tailwind.config.js
 **/*.test.js
 cypress
 reducers

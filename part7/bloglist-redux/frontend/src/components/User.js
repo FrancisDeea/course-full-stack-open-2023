@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 const User = ({ user }) => {
 
     if (!user) {
@@ -5,12 +7,13 @@ const User = ({ user }) => {
     }
 
     return (
-        <div>
-            <h2>{user.name}</h2>
-            <h3>Blogs added:</h3>
-            <ul>
+        <div className="p-4">
+            <h2 className="mb-4">{user.name}&apos;s latest blogs:</h2>
+            <ul className="flex flex-col gap-3">
                 {
-                    user.blogs.map(blog => <li key={blog.id}>{blog.title}</li>)
+                    user.blogs.map(blog => {
+                        return <Link key={blog.id} to={`/blogs/${blog.id}`}><li className="p-3 rounded font-semibold bg-gray-200 hover:bg-gray-300">{blog.title}</li></Link>
+                    })
                 }
             </ul>
         </div>

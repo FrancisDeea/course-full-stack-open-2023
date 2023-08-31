@@ -4,23 +4,31 @@ const Notification = () => {
   const notification = useSelector(state => state.notification)
 
   const success = {
-    border: "1px solid green",
     color: "green",
-    backgroundColor: "lightgray",
-    padding: 10,
-    fontSize: 16,
-    fontWeight: "bold",
+    backgroundColor: "#86efac",
   }
 
   const error = {
-    ...success,
-    border: "1px solid red",
+    backgroundColor: "#fca5a5",
     color: "red"
   }
 
   if (!notification) return null
-  if (notification.success) return <div className="notification" style={success}>{notification.success}</div>
-  if (notification.error) return <div className="notification" style={error}>{notification.error}</div>
+
+  return (
+    <div
+      className="w-10/12 max-w-xl absolute top-10 right-1/2 translate-x-1/2 rounded p-4 font-semibold animate-fade animate-duration-300 xl:right-10 xl:translate-x-0"
+      style={notification.success ? success : error}
+    >
+      {
+        notification.success
+          ? notification.success
+          : notification.error
+      }
+    </div>
+  )
+  // if (notification.success) return <div className="notification" style={success}>{notification.success}</div>
+  // if (notification.error) return <div className="notification" style={error}>{notification.error}</div>
 
 }
 

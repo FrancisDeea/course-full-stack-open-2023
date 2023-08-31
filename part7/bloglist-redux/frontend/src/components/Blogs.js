@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useRef } from 'react'
 
-import styles from './Blogs.module.css'
-
 import Togglable from './Togglable'
 import CreateForm from './CreateForm'
 
@@ -10,21 +8,26 @@ const Blogs = ({ blogs }) => {
   const createFormRef = useRef()
 
   return (
-    <div className={styles.container}>
-      <h2>blogs</h2>
-      <Togglable label="Create new blog" ref={createFormRef}>
-        <CreateForm reference={createFormRef} />
-      </Togglable>
-      {
-        blogs.map(blog => {
-          return (
-            <div className={styles.blog_container} key={blog.id}>
-              <p><Link to={`/blogs/${blog.id}`}>{blog.title}</Link></p>
-            </div>
-          )
-        })
-      }
-    </div>
+    <div className="p-4 flex flex-col gap-6">
+      <h2 className="">Latest Blogs</h2>
+
+      <div className="flex flex-col gap-4">
+        <Togglable label="Create new blog" ref={createFormRef}>
+          <CreateForm reference={createFormRef} />
+        </Togglable>
+        {
+          blogs.map(blog => {
+            return (
+              <Link to={`/blogs/${blog.id}`} key={blog.id}>
+                <div className="p-3 rounded bg-gray-200 hover:bg-gray-300">
+                  <p>{blog.title}</p>
+                </div>
+              </Link>
+            )
+          })
+        }
+      </div>
+    </div >
   )
 }
 
