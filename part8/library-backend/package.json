@@ -4,14 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node library-backend.js",
-    "dev":"nodemon library-backend.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^3.12.1",
+    "@apollo/server": "^4.9.3",
     "graphql": "^16.8.0"
   },
   "devDependencies": {
