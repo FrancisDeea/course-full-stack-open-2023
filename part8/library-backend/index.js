@@ -98,6 +98,12 @@ let books = [
 */
 
 const typeDefs = `#graphql
+  type Author {
+    name: String!
+    id: ID!
+    bookCount: Int!
+  }
+
   type Book {
     title: String!
     published: Int!
@@ -110,6 +116,7 @@ const typeDefs = `#graphql
     bookCount: Int!
     allBooks: [Book!]!
     authorCount: Int!
+    allAuthors: [Author!]!
   }
 `
 
@@ -117,8 +124,12 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     allBooks: () => books,
-    authorCount: () => authors.length
+    authorCount: () => authors.length,
+    allAuthors: () => authors
+  },
 
+  Author: {
+    bookCount: (root) => books.reduce((acc, curr) => curr.author.includes(root.name) ? acc + 1 : acc, 0)
   }
 }
 
