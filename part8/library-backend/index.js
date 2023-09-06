@@ -100,8 +100,8 @@ let books = [
 const typeDefs = `#graphql
   type Author {
     name: String!
-    id: ID!
     bookCount: Int!
+    born: Int
   }
 
   type Book {
@@ -117,6 +117,15 @@ const typeDefs = `#graphql
     allBooks(name: String, genre: String): [Book!]!
     authorCount: Int!
     allAuthors: [Author!]!
+  }
+
+  type Mutation {
+    addBook(
+      title: String!
+      published: Int!
+      author: String!
+      genres: [String!]!
+    ): Book
   }
 `
 
@@ -146,6 +155,23 @@ const resolvers = {
 
   Author: {
     bookCount: (root) => books.reduce((acc, curr) => curr.author.includes(root.name) ? acc + 1 : acc, 0)
+  },
+
+  Mutation: {
+    addBook: (root, args) => {
+      const author = {
+        name: args.author
+      }
+
+      const book = { ...args }
+      books = books.concat(book)
+
+      if (!authors.find(item => item.name === author.name)) {
+        authors = authors.concat(author)
+      }
+
+      return book
+    }
   }
 }
 
