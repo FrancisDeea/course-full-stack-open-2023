@@ -1,4 +1,14 @@
 const typeDefs = `#graphql
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
+
+  type Token {
+    value: String!
+  }
+
   type Author {
     name: String!
     bookCount: Int!
@@ -19,6 +29,7 @@ const typeDefs = `#graphql
     allBooks(name: String, genre: String): [Book!]
     authorCount: Int!
     allAuthors: [Author!]!
+    me: User
   }
 
   type Mutation {
@@ -33,6 +44,16 @@ const typeDefs = `#graphql
       name: String!
       setBornTo: Int!
     ): Author
+
+    createUser(
+      username: String!
+      favoriteGenre: String!
+    ): User
+
+    login(
+      username: String!
+      password: String!
+    ): Token
   }
 `
 module.exports = typeDefs
