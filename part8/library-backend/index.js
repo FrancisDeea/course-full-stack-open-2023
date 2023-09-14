@@ -14,8 +14,6 @@ require('dotenv').config()
 
 mongoose.connect(process.env.MONGO_URI)
   .then(async () => {
-    await Book.deleteMany()
-    await Author.deleteMany()
     console.log("Connected to Mongo successfully")
   })
   .catch((error) => console.log("Error connection Mongo: ", error))

@@ -48,6 +48,8 @@ const resolvers = {
 
             const currentUser = context.currentUser
 
+            console.log(currentUser)
+
             if (!currentUser) {
                 throw new GraphQLError('You have to be logged in!', {
                     extensions: {

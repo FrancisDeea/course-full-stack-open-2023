@@ -1,30 +1,63 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
+import Recommend from './components/Recommend'
+import Login from './components/Login'
 
-import { useQuery } from '@apollo/client'
+import { useApolloClient, useQuery } from '@apollo/client'
 import { ALL_AUTHORS } from './queries'
 
 const App = () => {
+  const [token, setToken] = useState(null)
   const [page, setPage] = useState('authors')
-  const result = useQuery(ALL_AUTHORS)
 
-  if (result.loading) return <div>Loading...</div>
+  const authors = useQuery(ALL_AUTHORS)
+  const client = useApolloClient()
+
+  const logout = () => {
+    setPage('authors')
+    setToken(null)
+    client.resetStore()
+    localStorage.clear()
+  }
+
+  useEffect(() => {
+    const localToken = localStorage.getItem('token')
+    if (localToken) {
+      setToken(localToken)
+    }
+  }, [])
+
+  if (authors.loading) return <div>Loading...</div>
 
   return (
     <div>
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
-        <button onClick={() => setPage('add')}>add book</button>
+        {token ? <button onClick={() => setPage('add')}>add book</button> : null}
+        {token ? <button onClick={() => setPage('recommend')}>Recommend</button> : null}
+        {
+          !token
+            ? <button onClick={() => setPage('login')}>login</button>
+            : <button onClick={logout}>logout</button>
+        }
       </div>
 
-      <Authors authors={result.data.allAuthors} show={page === 'authors'} />
+      <Authors authors={authors.data.allAuthors} show={page === 'authors'} token={token} />
 
       <Books show={page === 'books'} />
 
       <NewBook show={page === 'add'} />
+
+      {
+        token
+          ? <Recommend show={page === 'recommend'} />
+          : null
+      }
+
+      <Login show={page === 'login'} setToken={setToken} setPage={setPage} />
     </div>
   )
 }
