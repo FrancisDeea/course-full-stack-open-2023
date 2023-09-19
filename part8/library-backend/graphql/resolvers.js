@@ -1,10 +1,13 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken'
 
-const User = require('../models/User')
-const Book = require('../models/Book')
-const Author = require('../models/Author')
+import User from '../models/User.js'
+import Book from '../models/Book.js'
+import Author from '../models/Author.js'
 
-const { GraphQLError } = require('graphql')
+
+import { PubSub } from 'graphql-subscriptions'
+const pubsub = new PubSub()
+import { GraphQLError } from 'graphql'
 
 const resolvers = {
     Query: {
@@ -40,7 +43,7 @@ const resolvers = {
     },
 
     Author: {
-        bookCount: async (root) => await Book.countDocuments({ author: root.id })
+        // bookCount: async (root) => await Book.countDocuments({ author: root.id })
     },
 
     Mutation: {
@@ -89,6 +92,8 @@ const resolvers = {
 
             try {
                 await book.save()
+                author.bookCount = author.bookCount + 1
+                await author.save()
             }
 
             catch (error) {
@@ -99,6 +104,8 @@ const resolvers = {
                     }
                 })
             }
+
+            pubsub.publish('BOOK_ADDED', { bookAdded: book.populate('author') })
 
             return book.populate('author')
         },
@@ -157,7 +164,13 @@ const resolvers = {
 
             return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
         }
+    },
+
+    Subscription: {
+        bookAdded: {
+            subscribe: () => pubsub.asyncIterator(['BOOK_ADDED']),
+        },
     }
 }
 
-module.exports = resolvers
+export default resolvers
