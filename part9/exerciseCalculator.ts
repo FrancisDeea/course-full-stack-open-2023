@@ -1,3 +1,7 @@
+interface exerciseValues {
+  dailyHours: Array<number>;
+  target: number;
+}
 interface Result {
   periodLength: number;
   trainingDays: number;
@@ -8,17 +12,36 @@ interface Result {
   average: number;
 }
 
-const calculateExercise = (week: Array<number>, target: number): Result => {
-  const periodLength = week.length;
-
-  if (periodLength !== 7) {
+const parseArguments2 = (args: Array<string>): exerciseValues => {
+  if (args.length < 4)
     throw new Error(
-      "Invalid period length of week. Insert an array of 7 elements"
+      "Not enough arguments. Provide unless a target and a dailyHours"
     );
-  }
 
-  const trainingDays = week.reduce((acc, item) => (item > 0 ? acc + 1 : acc), 0);
-  const average = week.reduce((acc, item) => acc + item, 0) / 7;
+  const numberedArray = args.slice(2).map((i) => Number(i));
+
+  if (numberedArray.every((i) => !isNaN(i))) {
+    const [target, ...dailyHours] = numberedArray;
+    return {
+      dailyHours,
+      target,
+    };
+  } else {
+    throw new Error("Provided values are not numbers!");
+  }
+};
+
+const calculateExercise = (
+  dailyHours: Array<number>,
+  target: number
+): Result => {
+  const periodLength = dailyHours.length;
+  const trainingDays = dailyHours.reduce(
+    (acc, item) => (item > 0 ? acc + 1 : acc),
+    0
+  );
+  const average =
+    dailyHours.reduce((acc, item) => acc + item, 0) / periodLength;
   const success = average >= target;
   let rating;
   let ratingDescription;
@@ -54,4 +77,10 @@ const calculateExercise = (week: Array<number>, target: number): Result => {
   };
 };
 
-console.log(calculateExercise([2, 1.5, 2, 2, 2, 4, 1], 2));
+try {
+  const { dailyHours, target } = parseArguments2(process.argv);
+  console.log(calculateExercise(dailyHours, target));
+} catch (err) {
+  throw new Error(err);
+  console.log("Something went wrong. Error message: ", err.message);
+}
