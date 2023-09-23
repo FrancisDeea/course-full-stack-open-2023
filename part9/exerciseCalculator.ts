@@ -1,7 +1,7 @@
-interface exerciseValues {
-  dailyHours: Array<number>;
-  target: number;
-}
+// interface exerciseValues {
+//   dailyHours: Array<number>;
+//   target: number;
+// }
 interface Result {
   periodLength: number;
   trainingDays: number;
@@ -12,24 +12,24 @@ interface Result {
   average: number;
 }
 
-const parseArguments2 = (args: Array<string>): exerciseValues => {
-  if (args.length < 4)
-    throw new Error(
-      "Not enough arguments. Provide unless a target and a dailyHours"
-    );
+// const parseArguments2 = (args: Array<string>): exerciseValues => {
+//   if (args.length < 4)
+//     throw new Error(
+//       "Not enough arguments. Provide unless a target and a dailyHours"
+//     );
 
-  const numberedArray = args.slice(2).map((i) => Number(i));
+//   const numberedArray = args.slice(2).map((i) => Number(i));
 
-  if (numberedArray.every((i) => !isNaN(i))) {
-    const [target, ...dailyHours] = numberedArray;
-    return {
-      dailyHours,
-      target,
-    };
-  } else {
-    throw new Error("Provided values are not numbers!");
-  }
-};
+//   if (numberedArray.every((i) => !isNaN(i))) {
+//     const [target, ...dailyHours] = numberedArray;
+//     return {
+//       dailyHours,
+//       target,
+//     };
+//   } else {
+//     throw new Error("Provided values are not numbers!");
+//   }
+// };
 
 const calculateExercise = (
   dailyHours: Array<number>,
@@ -77,12 +77,14 @@ const calculateExercise = (
   };
 };
 
-try {
-  const { dailyHours, target } = parseArguments2(process.argv);
-  console.log(calculateExercise(dailyHours, target));
-} catch (err) {
-  if (err instanceof Error) {
-    throw new Error(err.message);
-    console.log(err);
-  }
-}
+// try {
+//   const { dailyHours, target } = parseArguments2(process.argv);
+//   console.log(calculateExercise(dailyHours, target));
+// } catch (err) {
+//   if (err instanceof Error) {
+//     throw new Error(err.message);
+//     console.log(err);
+//   }
+// }
+
+export default calculateExercise;
