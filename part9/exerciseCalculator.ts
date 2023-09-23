@@ -43,8 +43,8 @@ const calculateExercise = (
   const average =
     dailyHours.reduce((acc, item) => acc + item, 0) / periodLength;
   const success = average >= target;
-  let rating;
-  let ratingDescription;
+  let rating = 0;
+  let ratingDescription = "";
 
   if (average === 0) {
     rating = 0;
@@ -81,6 +81,8 @@ try {
   const { dailyHours, target } = parseArguments2(process.argv);
   console.log(calculateExercise(dailyHours, target));
 } catch (err) {
-  throw new Error(err);
-  console.log("Something went wrong. Error message: ", err.message);
+  if (err instanceof Error) {
+    throw new Error(err.message);
+    console.log(err);
+  }
 }

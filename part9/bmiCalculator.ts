@@ -17,7 +17,7 @@
 //   }
 // };
 
-const calculateBmi = (height: number, weight: number): String => {
+const calculateBmi = (height: number, weight: number): string => {
   const result = weight / Math.pow(height / 100, 2);
 
   if (result < 16) return "Underweight (Severe thinness)";
@@ -39,4 +39,4 @@ const calculateBmi = (height: number, weight: number): String => {
 //   throw new Error(`Something went wrong. Error message: ${err.message}`);
 // }
 
-export default calculateBmi
+export default calculateBmi;
